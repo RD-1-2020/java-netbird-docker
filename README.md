@@ -8,7 +8,7 @@ https://hub.docker.com/repository/docker/dmitriiazurecloud/java-netbird-docker/
 
 This image is based on:
 - `amazoncorretto:24.0.2-alpine3.22` - Amazon Corretto Java 24
-- `netbirdio/netbird:latest` - NetBird VPN client
+- `netbirdio/netbird:0.59.5` - NetBird VPN client
 
 The image allows running Java applications with automatic connection to NetBird VPN network.
 
@@ -93,27 +93,16 @@ docker build -t dmitriiazurecloud/java-netbird-docker:1.0.0 .
 
 ### Linux/macOS
 
+Change version in DockerFile and in publish.sh.
+
 ```bash
-chmod +x publish.sh
-./publish.sh 1.0.0 latest
-```
-
-### Windows (PowerShell)
-
-```powershell
-.\publish.ps1 -Version "1.0.0" -AdditionalTags "latest"
+./publish.sh
 ```
 
 ## Requirements
 
 - Docker Engine with multi-stage builds support
 - For NetBird: `--cap-add=NET_ADMIN` capability
-
-## Versions
-
-- Java: Amazon Corretto 24.0.2
-- Base OS: Alpine Linux 3.22
-- NetBird: latest
 
 ## License
 
