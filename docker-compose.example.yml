@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  java-netbird-app:
+    image: dmitriiazurecloud/java-netbird-docker:latest
+    container_name: java-netbird-app
+    
+    # Required for NetBird to work
+    cap_add:
+      - NET_ADMIN
+    
+    # Environment variables
+    environment:
+      # NetBird configuration
+      - NB_MANAGEMENT_URL=https://api.netbird.io:443
+      - NB_SETUP_KEY=your-setup-key-here
+      - NB_HOSTNAME=my-java-app
+      - NB_LOG_LEVEL=info
+      
+      # Java configuration
+      - JAVA_OPTS=-Xmx512m -Xms256m
+      - APP_OPTS=--spring.profiles.active=production
+    
+    # Mount JAR file
+    volumes:
+      - ./app.jar:/app/app.jar
+      # Optional: configuration files
+      - ./config:/app/config
+      # Optional: logs
+      - ./logs:/var/log/app
+    
+    # Ports (configure for your application)
+    ports:
+      - "8080:8080"
+    
+    # Java application startup command
+    command: java ${JAVA_OPTS} -jar /app/app.jar ${APP_OPTS}
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Health check (configure for your application)
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+# Without NetBird (if VPN is not needed)
+  java-app-no-vpn:
+    image: dmitriiazurecloud/java-netbird-docker:latest
+    container_name: java-app-no-vpn
+    
+    environment:
+      - JAVA_OPTS=-Xmx512m -Xms256m
+    
+    volumes:
+      - ./app.jar:/app/app.jar
+    
+    ports:
+      - "8081:8080"
+    
+    command: java ${JAVA_OPTS} -jar /app/app.jar
+    
+    restart: unless-stopped
+
